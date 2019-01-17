@@ -32,7 +32,7 @@ public class Driver {
         job.setMapperClass(MapWordCount.class);
         job.setReducerClass(ReducerWordCount.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(DoubleWritable.class);
+        job.setOutputValueClass(Text.class);
         //job.setNumReduceTasks(2);
 
         FileInputFormat.addInputPath(job, input);

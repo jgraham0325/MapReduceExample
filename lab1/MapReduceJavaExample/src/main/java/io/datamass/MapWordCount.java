@@ -1,15 +1,15 @@
 package io.datamass;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-
-public class MapWordCount extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class MapWordCount extends Mapper<LongWritable, Text, Text, Text> {
 
     public static final String TOTAL = "TOTAL";
 
@@ -27,6 +27,7 @@ public class MapWordCount extends Mapper<LongWritable, Text, Text, DoubleWritabl
 
         //store header
         if (key.get() == 0) {
+
             for (String val : values) {
                 headersList.add(val);
             }
@@ -36,8 +37,8 @@ public class MapWordCount extends Mapper<LongWritable, Text, Text, DoubleWritabl
         for (int i = 0; i < values.length; i++) {
             String stringValue = values[i];
             DataType dataType = determineDataType(stringValue.toUpperCase().trim());
-            String outputKey = "Column " + i + " (" + headersList.get(i) + "), Datatype: " + dataType.toString();
-            con.write(new Text(outputKey), new DoubleWritable(1.0));
+            String outputKey = headersList.get(i).toString();
+            con.write(new Text(outputKey), new Text(dataType.toString()));
         }
         //int columnNumberToProcess = con.getConfiguration().getInt("columnNumberToProcess", 0);
 
